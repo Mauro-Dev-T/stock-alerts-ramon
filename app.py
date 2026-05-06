@@ -111,15 +111,6 @@ def health():
     return jsonify({"status": "ok"}), 200
 
 
-def start_scheduler():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(check_all_stocks, 'cron', hour=8, minute=0)
-    scheduler.add_job(send_daily_report, 'cron', hour=18, minute=0)
-    scheduler.start()
-    print("Scheduler started")
-
-
 if __name__ == "__main__":
-    start_scheduler()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
