@@ -5,3 +5,4 @@ requests==2.31.0
 apscheduler==3.10.4
 werkzeug==2.3.6
 gunicorn==20.1.0
+setuptools>=40.8.0
