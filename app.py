@@ -1,6 +1,3 @@
-from email_service import send_daily_report
-from stock_monitor import check_all_stocks
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from datetime import datetime
@@ -19,7 +16,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Initialize DB
 init_db()
 
 
@@ -38,8 +34,6 @@ def load_user(user_id):
 
 def verify_password(username, password):
     return username == DASHBOARD_USER and password == DASHBOARD_PASS
-
-# ── AUTHENTICATION PATHS ──
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -64,15 +58,12 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-# ── DASHBOARD ──
-
 
 @app.route('/')
 @login_required
 def dashboard():
     stocks = get_stocks()
     alerts = get_alerts(limit=50)
-
     total_alerts = len(get_alerts(limit=10000))
     green_alerts = len([a for a in get_alerts(
         limit=10000) if a['direction'] == 'UP'])
@@ -84,10 +75,7 @@ def dashboard():
                            alerts=alerts,
                            total_alerts=total_alerts,
                            green_alerts=green_alerts,
-                           red_alerts=red_alerts
-                           )
-
-# ── API ENDPOINTS ──
+                           red_alerts=red_alerts)
 
 
 @app.route('/api/stocks')
@@ -102,8 +90,6 @@ def api_stocks():
 def api_alerts():
     alerts = get_alerts(limit=50)
     return jsonify(alerts)
-
-# ── HEALTH CHECK ──
 
 
 @app.route('/health')
