@@ -153,6 +153,30 @@
         background: rgba(255, 71, 87, 0.08);
       }
 
+      .btn-action {
+        background: transparent;
+        border: 1px solid #0066ff;
+        color: #0066ff;
+        padding: 4px 12px;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "Rajdhani", sans-serif;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .btn-action:hover {
+        background: #0066ff;
+        color: #080c10;
+      }
+
+      .btn-action.remove:hover {
+        background: #ff4757;
+        border-color: #ff4757;
+        color: white;
+      }
+
       .empty {
         padding: 40px 24px;
         text-align: center;
@@ -176,6 +200,10 @@
         th,
         td {
           padding: 8px 12px;
+        }
+        .btn-action {
+          padding: 3px 8px;
+          font-size: 10px;
         }
       }
     </style>
@@ -245,6 +273,68 @@
           </tbody>
         </table>
       </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Watchlist Management</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if stocks %} {% for stock in stocks[:20] %}
+            <tr>
+              <td>{{ stock.symbol }}</td>
+              <td>
+                {% if stock.in_watchlist %}
+                <span class="badge badge-green">✓ WATCHED</span>
+                {% else %}
+                <span class="badge badge-red">— NOT WATCHED</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if stock.in_watchlist %}
+                <button
+                  class="btn-action remove"
+                  onclick="removeStock('{{ stock.symbol }}')"
+                >
+                  Remove
+                </button>
+                {% else %}
+                <button
+                  class="btn-action add"
+                  onclick="addStock('{{ stock.symbol }}')"
+                >
+                  Add
+                </button>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %} {% else %}
+            <tr>
+              <td colspan="3" class="empty">Loading stocks...</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
     </div>
+
+    <script>
+      function addStock(symbol) {
+        console.log("Adding:", symbol);
+        // M2: Implementar lógica de agregar a watchlist
+      }
+
+      function removeStock(symbol) {
+        console.log("Removing:", symbol);
+        // M2: Implementar lógica de remover de watchlist
+      }
+    </script>
   </body>
 </html>
