@@ -1,229 +1,250 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stock Alerts - Dashboard</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background: #080c10;
-            color: #e2e8f0;
-            font-family: 'Rajdhani', sans-serif;
-            min-height: 100vh;
-        }
-        
-        header {
-            background: rgba(8,12,16,0.95);
-            border-bottom: 1px solid #1a2332;
-            padding: 0 32px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .logo {
-            font-size: 18px;
-            color: #0066ff;
-            letter-spacing: 3px;
-        }
-        
-        .header-right a {
-            color: #4a5568;
-            text-decoration: none;
-            border: 1px solid #1a2332;
-            padding: 6px 14px;
-            font-size: 12px;
-        }
-        
-        .header-right a:hover {
-            color: #ff4757;
-            border-color: #ff4757;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px;
-        }
-        
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #080c10;
+        color: #e2e8f0;
+        font-family: "Rajdhani", sans-serif;
+        min-height: 100vh;
+      }
+
+      header {
+        background: rgba(8, 12, 16, 0.95);
+        border-bottom: 1px solid #1a2332;
+        padding: 0 32px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        font-size: 18px;
+        color: #0066ff;
+        letter-spacing: 3px;
+      }
+
+      .header-right a {
+        color: #4a5568;
+        text-decoration: none;
+        border: 1px solid #1a2332;
+        padding: 6px 14px;
+        font-size: 12px;
+      }
+
+      .header-right a:hover {
+        color: #ff4757;
+        border-color: #ff4757;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 32px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .stat-card {
+        background: #0d1117;
+        border: 1px solid #1a2332;
+        padding: 24px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: #4a5568;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      .stat-value {
+        font-size: 32px;
+        color: #0066ff;
+        font-weight: bold;
+      }
+
+      .stat-value.red {
+        color: #f00505;
+      }
+      .stat-value.green {
+        color: #06c920;
+      }
+
+      .card {
+        background: #0d1117;
+        border: 1px solid #1a2332;
+        margin-bottom: 24px;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        border-bottom: 1px solid #1a2332;
+      }
+
+      .card-title {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: #4a5568;
+        text-transform: uppercase;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th {
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: #4a5568;
+        padding: 12px 24px;
+        text-align: left;
+        border-bottom: 1px solid #1a2332;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 12px 24px;
+        border-bottom: 1px solid rgba(26, 35, 50, 0.5);
+        font-size: 13px;
+      }
+
+      tr:hover td {
+        background: rgba(0, 212, 170, 0.02);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        font-size: 10px;
+        font-weight: 700;
+        border: 1px solid;
+      }
+
+      .badge-green {
+        color: #0066ff;
+        border-color: rgba(0, 212, 170, 0.3);
+        background: rgba(0, 212, 170, 0.08);
+      }
+
+      .badge-red {
+        color: #ff4757;
+        border-color: rgba(255, 71, 87, 0.3);
+        background: rgba(255, 71, 87, 0.08);
+      }
+
+      .empty {
+        padding: 40px 24px;
+        text-align: center;
+        color: #4a5568;
+        font-size: 12px;
+      }
+
+      @media (max-width: 768px) {
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
+          grid-template-columns: repeat(2, 1fr);
         }
-        
-        .stat-card {
-            background: #0d1117;
-            border: 1px solid #1a2332;
-            padding: 24px;
+        .container {
+          padding: 16px;
         }
-        
-        .stat-label {
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: #4a5568;
-            margin-bottom: 12px;
-            text-transform: uppercase;
+        header {
+          padding: 0 16px;
         }
-        
-        .stat-value {
-            font-size: 32px;
-            color: #0066ff;
-            font-weight: bold;
-        }
-        
-        .stat-value.red { color: #f00505; }
-        .stat-value.green { color: #06c920; }
-        
-        .card {
-            background: #0d1117;
-            border: 1px solid #1a2332;
-            margin-bottom: 24px;
-        }
-        
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            border-bottom: 1px solid #1a2332;
-        }
-        
-        .card-title {
-            font-size: 12px;
-            letter-spacing: 2px;
-            color: #4a5568;
-            text-transform: uppercase;
-        }
-        
         table {
-            width: 100%;
-            border-collapse: collapse;
+          font-size: 11px;
         }
-        
-        th {
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: #4a5568;
-            padding: 12px 24px;
-            text-align: left;
-            border-bottom: 1px solid #1a2332;
-            text-transform: uppercase;
-        }
-        
+        th,
         td {
-            padding: 12px 24px;
-            border-bottom: 1px solid rgba(26,35,50,0.5);
-            font-size: 13px;
+          padding: 8px 12px;
         }
-        
-        tr:hover td {
-            background: rgba(0,212,170,0.02);
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            font-size: 10px;
-            font-weight: 700;
-            border: 1px solid;
-        }
-        
-        .badge-green {
-            color: #0066ff;
-            border-color: rgba(0,212,170,0.3);
-            background: rgba(0,212,170,0.08);
-        }
-        
-        .badge-red {
-            color: #ff4757;
-            border-color: rgba(255,71,87,0.3);
-            background: rgba(255,71,87,0.08);
-        }
-        
-        .empty {
-            padding: 40px 24px;
-            text-align: center;
-            color: #4a5568;
-            font-size: 12px;
-        }
+      }
     </style>
-</head>
-<body>
-
-<header>
-    <span class="logo">STOCK ALERTS</span>
-    <div class="header-right">
+  </head>
+  <body>
+    <header>
+      <span class="logo">STOCK ALERTS</span>
+      <div class="header-right">
         <a href="/logout">Logout</a>
-    </div>
-</header>
+      </div>
+    </header>
 
-<div class="container">
-    
-    <div class="stats-grid">
+    <div class="container">
+      <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-label">Stocks Monitored</div>
-            <div class="stat-value">600</div>
+          <div class="stat-label">Stocks Monitored</div>
+          <div class="stat-value">600</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Total Alerts</div>
-            <div class="stat-value">{{ total_alerts }}</div>
+          <div class="stat-label">Total Alerts</div>
+          <div class="stat-value">{{ total_alerts }}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Green Alerts</div>
-            <div class="stat-value green">{{ green_alerts }}</div>
+          <div class="stat-label">Green Alerts</div>
+          <div class="stat-value green">{{ green_alerts }}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Red Alerts</div>
-            <div class="stat-value red">{{ red_alerts }}</div>
+          <div class="stat-label">Red Alerts</div>
+          <div class="stat-value red">{{ red_alerts }}</div>
         </div>
-    </div>
-    
-    <div class="card">
+      </div>
+
+      <div class="card">
         <div class="card-header">
-            <span class="card-title">Active Alerts</span>
+          <span class="card-title">Active Alerts</span>
         </div>
         <table>
-            <thead>
-                <tr>
-                    <th>Symbol</th>
-                    <th>Price</th>
-                    <th>SMA 200</th>
-                    <th>Direction</th>
-                    <th>Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if alerts %}
-                    {% for alert in alerts[:10] %}
-                    <tr>
-                        <td>{{ alert.symbol }}</td>
-                        <td>${{ "%.2f"|format(alert.price) }}</td>
-                        <td>${{ "%.2f"|format(alert.sma_200) }}</td>
-                        <td>
-                            {% if alert.direction == 'UP' %}
-                                <span class="badge badge-green">↑ BULLISH</span>
-                            {% else %}
-                                <span class="badge badge-red">↓ BEARISH</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ alert.created_at }}</td>
-                    </tr>
-                    {% endfor %}
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Price</th>
+              <th>SMA 200</th>
+              <th>Direction</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if alerts %} {% for alert in alerts[:10] %}
+            <tr>
+              <td>{{ alert.symbol }}</td>
+              <td>${{ "%.2f"|format(alert.price) }}</td>
+              <td>${{ "%.2f"|format(alert.sma_200) }}</td>
+              <td>
+                {% if alert.direction == 'UP' %}
+                <span class="badge badge-green">↑ BULLISH</span>
                 {% else %}
-                    <tr>
-                        <td colspan="5" class="empty">No alerts yet</td>
-                    </tr>
+                <span class="badge badge-red">↓ BEARISH</span>
                 {% endif %}
-            </tbody>
+              </td>
+              <td>{{ alert.created_at }}</td>
+            </tr>
+            {% endfor %} {% else %}
+            <tr>
+              <td colspan="5" class="empty">No alerts yet</td>
+            </tr>
+            {% endif %}
+          </tbody>
         </table>
+      </div>
     </div>
-    
-</div>
-
-</body>
+  </body>
 </html>
