@@ -41,5 +41,7 @@ GitHub: https://github.com/Mauro-Dev-T/stock-alerts-ramon
 ## Author
 
 **Mauricio Leiva** - Python Developer | Trading Automation Specialist
+[Upwork Profile](https://www.upwork.com/freelancers/~016463e7b3cbc8fa20)
+
 
 **System Status**: ✅ Live and monitoring 24/7
