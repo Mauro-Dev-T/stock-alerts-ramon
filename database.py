@@ -102,3 +102,34 @@ def add_stock(symbol):
     except sqlite3.IntegrityError:
         pass
     conn.close()
+
+
+def add_to_watchlist(symbol):
+    """Add stock to watchlist"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE stocks SET monitored=1 WHERE symbol=?", (symbol,))
+    conn.commit()
+    conn.close()
+
+
+def remove_from_watchlist(symbol):
+    """Remove stock from watchlist"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE stocks SET monitored=0 WHERE symbol=?", (symbol,))
+    conn.commit()
+    conn.close()
+
+
+def get_stocks_with_watchlist():
+    """Get all stocks with watchlist status"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT symbol, monitored as in_watchlist FROM stocks ORDER BY symbol")
+    rows = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return rows

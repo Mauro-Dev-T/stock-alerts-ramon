@@ -6,3 +6,4 @@ apscheduler==3.10.4
 werkzeug==2.3.6
 gunicorn==21.2.0
 setuptools>=40.8.0
+sendgrid==6.12.5

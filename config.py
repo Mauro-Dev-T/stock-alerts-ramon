@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Dashboard credentials
-DASHBOARD_USER = os.getenv("DASHBOARD_USER", "admin")
-DASHBOARD_PASS = os.getenv("DASHBOARD_PASS", "admin123")
+DASHBOARD_USER = os.getenv("DASHBOARD_USER", "vanmeer")
+DASHBOARD_PASS = os.getenv("DASHBOARD_PASS", "vanmeersalerts2026$")
 
 # Polygon.io API
 POLYGON_API_KEY = os.getenv("POLYGON_API_KEY", "")
@@ -27,3 +27,5 @@ CLIENT_EMAIL = os.getenv("CLIENT_EMAIL", "")
 
 # Alert threshold (1%)
 ALERT_THRESHOLD = 0.01
+
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "")
