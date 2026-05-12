@@ -220,7 +220,7 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Stocks Monitored</div>
-          <div class="stat-value">600</div>
+          <div class="stat-value">365</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total Alerts</div>
@@ -251,7 +251,7 @@
             </tr>
           </thead>
           <tbody>
-            {% if alerts %} {% for alert in alerts[:10] %}
+            {% if alerts %} {% for alert in alerts %}
             <tr>
               <td>{{ alert.symbol }}</td>
               <td>${{ "%.2f"|format(alert.price) }}</td>
@@ -287,7 +287,7 @@
             </tr>
           </thead>
           <tbody>
-            {% if stocks %} {% for stock in stocks[:20] %}
+            {% if stocks %} {% for stock in stocks %}
             <tr>
               <td>{{ stock.symbol }}</td>
               <td>
