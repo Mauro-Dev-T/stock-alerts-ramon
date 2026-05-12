@@ -2,7 +2,7 @@
 .venv/
 __pycache__/
 *.pyc
-*.db
 desktop.ini
 .env.local
 credentials.txt
+*.db
