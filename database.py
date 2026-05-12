@@ -53,6 +53,17 @@ def init_db():
     """)
 
     conn.commit()
+
+    # Poblar tabla stocks con todos los símbolos
+    from stock_monitor import ALL_STOCKS
+    for symbol in ALL_STOCKS:
+        try:
+            cursor.execute(
+                "INSERT OR IGNORE INTO stocks (symbol, monitored) VALUES (?, 1)", (symbol,))
+        except:
+            pass
+
+    conn.commit()
     conn.close()
 
 

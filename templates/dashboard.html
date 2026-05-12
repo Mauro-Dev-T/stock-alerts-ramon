@@ -327,13 +327,33 @@
 
     <script>
       function addStock(symbol) {
-        console.log("Adding:", symbol);
-        // M2: Implementar lógica de agregar a watchlist
+        fetch("/api/watchlist/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symbol: symbol }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "added") {
+              location.reload();
+            }
+          })
+          .catch((err) => console.error("Error:", err));
       }
 
       function removeStock(symbol) {
-        console.log("Removing:", symbol);
-        // M2: Implementar lógica de remover de watchlist
+        fetch("/api/watchlist/remove", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symbol: symbol }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "removed") {
+              location.reload();
+            }
+          })
+          .catch((err) => console.error("Error:", err));
       }
     </script>
   </body>
