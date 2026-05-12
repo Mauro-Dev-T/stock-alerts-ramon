@@ -146,15 +146,17 @@ def health():
 
 def start_scheduler():
     scheduler = BackgroundScheduler()
-    # Daily check at 4:30 PM ET (market close)
-    scheduler.add_job(check_all_stocks, 'cron', hour=21, minute=30)
-    # Daily email at 5:00 PM ET
-    scheduler.add_job(send_daily_report, 'cron', hour=22, minute=0)
+    # Daily check at 4:15 PM ET (market close)
+    scheduler.add_job(check_all_stocks, 'cron', hour=21, minute=15)
+    # Daily email at 4:30 PM ET
+    scheduler.add_job(send_daily_report, 'cron', hour=21, minute=30)
     scheduler.start()
-    print("Scheduler started - Daily check at 4:30 PM ET")
+    print("Scheduler started - Daily check at 4:15 PM ET, Email at 4:30 PM ET")
 
+
+# Start scheduler automatically (runs with Gunicorn)
+start_scheduler()
 
 if __name__ == "__main__":
-    start_scheduler()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
