@@ -148,10 +148,10 @@ def start_scheduler():
     scheduler = BackgroundScheduler()
     # Daily check at 4:15 PM ET (market close)
     scheduler.add_job(check_all_stocks, 'cron', hour=21, minute=15)
-    # Daily email at 4:30 PM ET
-    scheduler.add_job(send_daily_report, 'cron', hour=21, minute=30)
+    # Daily email at 5:00 PM ET
+    scheduler.add_job(send_daily_report, 'cron', hour=22, minute=0)
     scheduler.start()
-    print("Scheduler started - Daily check at 4:15 PM ET, Email at 4:30 PM ET")
+    print("Scheduler started - Daily check at 4:15 PM ET, Email at 5:00 PM ET")
 
 
 # Start scheduler automatically (runs with Gunicorn)
