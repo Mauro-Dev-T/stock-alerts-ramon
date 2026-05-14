@@ -168,3 +168,11 @@ def start_scheduler():
 
     scheduler.start()
     print("Scheduler started - Check at 4:15 PM ET, Email at 4:30 PM ET")
+
+
+# Start scheduler automatically (runs with Gunicorn)
+start_scheduler()
+
+if __name__ == "__main__":
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
