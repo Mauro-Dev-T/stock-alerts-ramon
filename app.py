@@ -4,6 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import timezone
 from datetime import datetime
 import os
+import threading
 from dotenv import load_dotenv
 
 from config import DASHBOARD_USER, DASHBOARD_PASS, SECRET_KEY
@@ -119,9 +120,13 @@ def api_remove_watchlist():
 @app.route('/api/trigger-check')
 @login_required
 def api_trigger_check():
-    """Manual trigger for stock check (testing)"""
-    alerts = check_all_stocks()
-    return jsonify({"status": "completed", "alerts_created": alerts}), 200
+    """Manual trigger for stock check (runs in background thread)"""
+    thread = threading.Thread(target=check_all_stocks, daemon=True)
+    thread.start()
+    return jsonify({
+        "status": "started",
+        "message": "Stock check running in background. Check logs for progress."
+    }), 202
 
 
 @app.route('/api/test-email')
@@ -135,9 +140,13 @@ def api_test_email():
 @app.route('/api/send-report')
 @login_required
 def api_send_report():
-    from email_service import send_daily_report
-    result = send_daily_report()
-    return jsonify({"status": "sent" if result else "failed"}), 200
+    """Manual trigger for daily email report (runs in background thread)"""
+    thread = threading.Thread(target=send_daily_report, daemon=True)
+    thread.start()
+    return jsonify({
+        "status": "started",
+        "message": "Email report sending in background. Check logs for confirmation."
+    }), 202
 
 
 @app.route('/health')
