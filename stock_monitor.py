@@ -83,7 +83,7 @@ print(f"Total unique stocks to monitor: {len(ALL_STOCKS)}")
 def check_all_stocks():
     """
     Check all stocks and create alerts if price is within 1% of SMA 200.
-    Runs daily from the scheduler.
+    Runs daily from the scheduler. Sends email report automatically at the end.
     """
     print(
         f"[{datetime.now()}] Starting daily stock check for {len(ALL_STOCKS)} stocks...")
@@ -139,6 +139,15 @@ def check_all_stocks():
             continue
 
     print(f"[{datetime.now()}] Check completed: {alerts_created} alerts | {skipped} skipped | {errors} errors")
+
+    # Send daily email report automatically after check
+    try:
+        from email_service import send_daily_report
+        send_daily_report()
+        print(f"[{datetime.now()}] Daily email report sent successfully")
+    except Exception as e:
+        print(f"[{datetime.now()}] Error sending daily email: {e}")
+
     return alerts_created
 
 
