@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from apscheduler.schedulers.background import BackgroundScheduler
+from pytz import timezone
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -145,16 +146,25 @@ def health():
 
 
 def start_scheduler():
-    scheduler = BackgroundScheduler()
-    # Daily check at 4:15 PM ET (email sent automatically after check)
-    scheduler.add_job(check_all_stocks, 'cron', hour=21, minute=15)
+    scheduler = BackgroundScheduler(timezone=timezone('US/Eastern'))
+
+    # Daily check at 4:15 PM ET
+    scheduler.add_job(
+        check_all_stocks,
+        'cron',
+        hour=16,
+        minute=15,
+        id='daily_stock_check'
+    )
+
+    # Daily email at 4:30 PM ET
+    scheduler.add_job(
+        send_daily_report,
+        'cron',
+        hour=16,
+        minute=30,
+        id='daily_email_report'
+    )
+
     scheduler.start()
-    print("Scheduler started - Daily check at 4:15 PM ET (email sent automatically after check)")
-
-
-# Start scheduler automatically (runs with Gunicorn)
-start_scheduler()
-
-if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    print("Scheduler started - Check at 4:15 PM ET, Email at 4:30 PM ET")
