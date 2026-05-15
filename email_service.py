@@ -1,13 +1,52 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import os
 from datetime import datetime
-from config import EMAIL_ADDRESS, EMAIL_PASSWORD, CLIENT_EMAIL
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from config import SENDGRID_API_KEY, EMAIL_ADDRESS
 from database import get_alerts
 
 
+FROM_EMAIL = EMAIL_ADDRESS
+TO_EMAILS = ["ramon@vanmeer.com", "sameer.sahakari@gmail.com"]
+
+
+def _send_via_sendgrid(subject: str, body: str) -> bool:
+    """Envía un email vía SendGrid API. Retorna True si fue exitoso."""
+    try:
+        if not SENDGRID_API_KEY:
+            print("Error: SENDGRID_API_KEY is not configured", flush=True)
+            return False
+
+        message = Mail(
+            from_email=FROM_EMAIL,
+            to_emails=TO_EMAILS,
+            subject=subject,
+            plain_text_content=body,
+        )
+
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+
+        if 200 <= response.status_code < 300:
+            print(
+                f"Email sent successfully via SendGrid (status {response.status_code})", flush=True)
+            return True
+        else:
+            print(
+                f"SendGrid returned non-success status: {response.status_code}", flush=True)
+            print(f"Response body: {response.body}", flush=True)
+            return False
+
+    except Exception as e:
+        print(
+            f"Error sending email via SendGrid: {type(e).__name__}: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
+        return False
+
+
 def send_daily_report():
-    """Sends daily alert report via Gmail (only TODAY's alerts)"""
+    """Sends daily alert report via SendGrid (only TODAY's alerts)"""
     try:
         all_alerts = get_alerts(limit=10000)
 
@@ -19,12 +58,11 @@ def send_daily_report():
         green_alerts = [a for a in today_alerts if a['direction'] == 'UP']
         red_alerts = [a for a in today_alerts if a['direction'] == 'DOWN']
 
-        body = f"""
-Daily Stock Alerts Report
+        body = f"""Daily Stock Alerts Report
 Date: {datetime.now().strftime('%Y-%m-%d')}
 
 GREEN ALERTS (Bullish - Price rising toward SMA):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+----------------------------------------------------------
 """
         if green_alerts:
             body += "Symbol | Price | SMA 200 | % from SMA\n"
@@ -37,7 +75,7 @@ GREEN ALERTS (Bullish - Price rising toward SMA):
 
         body += f"""
 RED ALERTS (Bearish - Price falling toward SMA):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+----------------------------------------------------------
 """
         if red_alerts:
             body += "Symbol | Price | SMA 200 | % from SMA\n"
@@ -49,7 +87,7 @@ RED ALERTS (Bearish - Price falling toward SMA):
             body += "No red alerts today\n"
 
         body += f"""
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+----------------------------------------------------------
 Total Alerts Today: {len(today_alerts)}
 Green (Bullish): {len(green_alerts)}
 Red (Bearish): {len(red_alerts)}
@@ -58,45 +96,25 @@ Login to dashboard: https://stock-alerts-ramon.onrender.com
 Report generated automatically by Stock Alerts System
 """
 
-        msg = MIMEMultipart()
-        msg['From'] = EMAIL_ADDRESS
-        msg['To'] = "ramon@vanmeer.com, sameer.sahakari@gmail.com"
-        msg['Subject'] = f"Stock Alerts Report - {datetime.now().strftime('%Y-%m-%d')}"
-        msg.attach(MIMEText(body, 'plain'))
+        subject = f"Stock Alerts Report - {datetime.now().strftime('%Y-%m-%d')}"
+        result = _send_via_sendgrid(subject, body)
 
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        server.send_message(msg)
-        server.quit()
+        if result:
+            print(
+                f"[{datetime.now()}] Daily email report sent successfully", flush=True)
 
-        print(f"Email sent successfully")
-        return True
+        return result
 
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(
+            f"Error building daily report: {type(e).__name__}: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
         return False
 
 
 def send_test_email():
-    """Send a test email via Gmail"""
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = EMAIL_ADDRESS
-        msg['To'] = "ramon@vanmeer.com, sameer.sahakari@gmail.com"
-        msg['Subject'] = "Stock Alerts System - Test Email"
-        msg.attach(MIMEText(
-            "This is a test email from Stock Alerts System. Gmail is working!", 'plain'))
-
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        server.send_message(msg)
-        server.quit()
-
-        print(f"Test email sent successfully")
-        return True
-
-    except Exception as e:
-        print(f"Error sending test email: {e}")
-        return False
+    """Sends a test email via SendGrid"""
+    subject = "Stock Alerts System - Test Email"
+    body = "This is a test email from Stock Alerts System. SendGrid is working!"
+    return _send_via_sendgrid(subject, body)
