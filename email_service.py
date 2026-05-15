@@ -114,7 +114,34 @@ Report generated automatically by Stock Alerts System
 
 
 def send_test_email():
-    """Sends a test email via SendGrid"""
-    subject = "Stock Alerts System - Test Email"
-    body = "This is a test email from Stock Alerts System. SendGrid is working!"
-    return _send_via_sendgrid(subject, body)
+    """Sends a test email via SendGrid - only to developer for testing"""
+    try:
+        if not SENDGRID_API_KEY:
+            print("Error: SENDGRID_API_KEY is not configured", flush=True)
+            return False
+
+        message = Mail(
+            from_email=FROM_EMAIL,
+            to_emails=["leivatt51@gmail.com"],  # ← solo al dev, no al cliente
+            subject="Stock Alerts System - Test Email",
+            plain_text_content="This is a test email from Stock Alerts System. SendGrid is working!",
+        )
+
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+
+        if 200 <= response.status_code < 300:
+            print(
+                f"Test email sent successfully via SendGrid (status {response.status_code})", flush=True)
+            return True
+        else:
+            print(
+                f"SendGrid returned non-success status: {response.status_code}", flush=True)
+            print(f"Response body: {response.body}", flush=True)
+            return False
+
+    except Exception as e:
+        print(f"Error sending test email: {type(e).__name__}: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
+        return False
